@@ -1,18 +1,24 @@
 import tkinter as tk
 import tkinter.font as tkFont
-import time
+
+
+root = tk.Tk()
+root.geometry("400x400")
+root.title("Tic Tac Toe")
+main_font = tkFont.Font(family="Helvetica", size=20)
+cell_font = tkFont.Font(family="Helvetica", size=40)
+
 
 class Cell(tk.Frame):
-    def __init__(self, parent, label, clickFunc, pos, default=""):
+    def __init__(self, parent, clickFunc, pos, default=""):
+        tk.Frame.__init__(self, parent)
         self.state = -100
         self.clickFunc = clickFunc
-        font = tkFont.Font(family="Helvetica", size=20, weight=tkFont.BOLD)
-        tk.Frame.__init__(self, parent)
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         self.grid_propagate(0)
         onClick = lambda: clickFunc(pos[0], pos[1])
-        self.button = tk.Button(self, text = "  ", font = font, command = onClick)
+        self.button = tk.Button(self, text = "  ", font = cell_font, command = onClick)
         self.button.grid(sticky="NWSE")
 
         self.button.pack()
@@ -31,9 +37,9 @@ class Board(tk.Frame):
     def __init__(self, parent, winFunc):
         tk.Frame.__init__(self, parent)
         self.winFunc = winFunc
-        self.warning = tk.Label(self, text = "")
+        self.warning = tk.Label(self, text = "", font = main_font)
         self.gridFrame = tk.Frame(self)
-        self.grid = [[Cell(self.gridFrame, str(w)+" "+str(h), lambda x, y: self.handleMove(x, y), (w, h)) for w in range(3)] for h in range(3)]
+        self.grid = [[Cell(self.gridFrame, lambda x, y: self.handleMove(x, y), (w, h)) for w in range(3)] for h in range(3)]
         for h in range(3):
             for w in range(3):
                 cell = self.grid[h][w]
@@ -121,9 +127,9 @@ class ChoiceMenu(tk.Frame):
                 self.pack_forget()
             return close
         funcs = list(map(wrap, funcs))
-        self.stats = tk.Button(self, text="Show\nStats")
-        self.play  = tk.Button(self, text="Play\nAgain")
-        self.quitb = tk.Button(self, text="Quit", height=2)
+        self.stats = tk.Button(self, text="Show\nStats", font=main_font)
+        self.play  = tk.Button(self, text="Play\nAgain", font=main_font)
+        self.quitb = tk.Button(self, text="Quit", height=2, font=main_font)
 
         self.stats.config(command=funcs[0])
         self.play.config(command=funcs[1])
@@ -139,12 +145,12 @@ class StatMenu(tk.Frame):
         if stats is None:
             stats = [0, 0, 0, 0]
         self.stats = stats
-        self.games = tk.Label(self, text=f"Games: {stats[0]}")
-        self.p1wins = tk.Label(self, text=f"Player 1 Wins: {stats[1]}")
-        self.p2wins = tk.Label(self, text=f"Player 2 Wins: {stats[2]}")
-        self.ties = tk.Label(self, text=f"Ties: {stats[3]}")
+        self.games = tk.Label(self, text=f"Games: {stats[0]}", font=main_font)
+        self.p1wins = tk.Label(self, text=f"Player 1 Wins: {stats[1]}", font=main_font)
+        self.p2wins = tk.Label(self, text=f"Player 2 Wins: {stats[2]}", font=main_font)
+        self.ties = tk.Label(self, text=f"Ties: {stats[3]}", font=main_font)
 
-        self.closeb = tk.Button(self, text="Close Stats")
+        self.closeb = tk.Button(self, text="Close Stats", font=main_font)
 
         self.closeb.config(command=closeFunc)
 
@@ -203,6 +209,5 @@ class Game(tk.Frame):
     def closeGame(self):
         root.quit()
 
-root = tk.Tk()
 Game(root).place(x=0, y=0, relwidth=1, relheight=1)
 root.mainloop()
