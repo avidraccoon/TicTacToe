@@ -1,7 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
 
-
 root = tk.Tk()
 root.geometry("400x400")
 root.title("Tic Tac Toe")
@@ -86,13 +85,12 @@ class Board(tk.Frame):
             return
         self.grid[y][x].setState(self.player)
         self.turn += 1
+        root.title(f"Tic Tac Toe - Game | Turn {self.turn}")
         if self.turn >= 5:
             check = self.checkForWin()
             if check == 1:
-                print("Player 1")
                 self.winner = "Player 1"
             elif check == 2:
-                print("Player 2")
                 self.winner = "Player 2"
         if self.turn == 9 and self.winner == "":
             self.winner = "Tie"
@@ -196,18 +194,24 @@ class Game(tk.Frame):
         self.after(1000, lambda: self.displayMenu())
 
     def displayMenu(self):
+        root.title(f"Tic Tac Toe - Menu")
         self.choices.pack()
 
     def playAgain(self):
+        root.title(f"Tic Tac Toe - Game")
         self.game.pack()
         self.game.reset()
 
     def displayStats(self):
+        root.title(f"Tic Tac Toe - Stats")
         self.stats.pack()
         self.stats.updateStats([self.games, self.player1WinCount, self.player2WinCount, self.tieCount])
 
     def closeGame(self):
         root.quit()
 
-Game(root).place(x=0, y=0, relwidth=1, relheight=1)
+game = Game(root)
+game.playAgain()
+game.place(x=0, y=0, relwidth=1, relheight=1)
+
 root.mainloop()
